@@ -39,7 +39,7 @@ class Token
      * You can insert this token into your forms as a hidden field:
      *
      *  <code>
-     *      echo Form::hidden('csrf', Token::generate());
+     *      <input type="hidden" name="csrf" value="<?php echo Token::generate(); ?>">
      *  </code>
      *
      * This provides a basic, but effective, method of preventing CSRF attacks.
