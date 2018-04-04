@@ -2,21 +2,33 @@
 ![version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg?style=flat-square "Version")
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/flextype-ccomponents/token/blob/master/LICENSE)
 
-The Token component generate and store a unique token which can be used to help prevent  
+The Token component generate and store a unique token which can be used to help prevent [CSRF](http://wikipedia.org/wiki/Cross_Site_Request_Forgery) attacks.   
+
+### Installation
+
+```
+composer require force-components/token
+```
+
+### Usage
 
 Generate token
-[CSRF](http://wikipedia.org/wiki/Cross_Site_Request_Forgery) attacks.  
 ```php
+use Flextype\Component\Token\Token;
+
 $token = Token::generate();
 ```
 
 Generate token in the template
-```html
+```php
+<?php use Flextype\Component\Token\Token; ?>
 <input type="hidden" name="csrf" value="<?php echo Token::generate(); ?>">
 ```
 
 Check that the given token matches the currently stored security token.  
 ```php
+use Flextype\Component\Token\Token;
+
 if (Token::check($token)) {
     // Pass
 }
