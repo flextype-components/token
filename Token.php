@@ -1,13 +1,19 @@
 <?php
 
- /**
-  * This file is part of the Force Components.
-  *
-  * (c) Romanenko Sergey / Awilum <awilum@msn.com>
-  *
-  * For the full copyright and license information, please view the LICENSE
-  * file that was distributed with this source code.
-  */
+namespace Flextype\Component\Token;
+
+use Flextype\Component\Session\Session;
+
+
+/**
+ * @package Flextype Components
+ *
+ * @author Sergey Romanenko <awilum@yandex.ru>
+ * @link https://github.com/flextype-components
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 class Token
 {
@@ -47,7 +53,7 @@ class Token
      * @param  boolean $new force a new token to be generated?. Default is false
      * @return string
      */
-    public static function generate($new = false)
+    public static function generate(bool $new = false) : string
     {
         // Get the current token
         $token = Session::get(Token::$token_name);
