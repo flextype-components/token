@@ -1,12 +1,14 @@
-# Token
-Token class
+# Token Component
 
-Generate and store a unique token which can be used to help prevent  
+The Token component generate and store a unique token which can be used to help prevent  
+
+Generate token
 [CSRF](http://wikipedia.org/wiki/Cross_Site_Request_Forgery) attacks.  
 ```php
 $token = Token::generate();
 ```
 
+Generate token in the template
 ```html
 <input type="hidden" name="csrf" value="<?php echo Token::generate(); ?>">
 ```
@@ -18,6 +20,5 @@ if (Token::check($token)) {
 }
 ```
 
-
 ## License
-See [LICENSE](https://github.com/force-components/Token/blob/master/LICENSE)
+See [LICENSE](https://github.com/flextype-components/token/blob/master/LICENSE)

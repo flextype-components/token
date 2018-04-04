@@ -1,3 +1,8 @@
+# v1.1.0, 2018-04-05
+* PHP7 support added
+* Generate a new unique token with openssl_random_pseudo_bytes added
+* New method slowEquals() to prevents cryptographic side-channel attacks added
+
 # v1.0.3, 2018-04-04
 * General fixes
 
