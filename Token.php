@@ -1,19 +1,18 @@
 <?php
 
-namespace Flextype\Component\Token;
-
-use Flextype\Component\Session\Session;
-
-
 /**
  * @package Flextype Components
  *
  * @author Sergey Romanenko <awilum@yandex.ru>
- * @link https://github.com/flextype-components
+ * @link http://components.flextype.org
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+namespace Flextype\Component\Token;
+
+use Flextype\Component\Session\Session;
 
 class Token
 {
@@ -22,35 +21,21 @@ class Token
      *
      * @var  string
      */
-    protected static $token_name = 'security_token';
-
-    /**
-     * Protected constructor since this is a static class.
-     *
-     * @access  protected
-     */
-    protected function __construct()
-    {
-        // Nothing here
-    }
+    public static $token_name = 'security_token';
 
     /**
      * Generate and store a unique token which can be used to help prevent
      * [CSRF](http://wikipedia.org/wiki/Cross_Site_Request_Forgery) attacks.
      *
-     *  <code>
-     *      $token = Token::generate();
-     *  </code>
+     * $token = Token::generate();
      *
      * You can insert this token into your forms as a hidden field:
      *
-     *  <code>
-     *      <input type="hidden" name="csrf" value="<?php echo Token::generate(); ?>">
-     *  </code>
+     * <input type="hidden" name="csrf" value="<?php echo Token::generate(); ?>">
      *
      * This provides a basic, but effective, method of preventing CSRF attacks.
      *
-     * @param  boolean $new force a new token to be generated?. Default is false
+     * @param  bool $new force a new token to be generated?. Default is false
      * @return string
      */
     public static function generate(bool $new = false) : string
@@ -59,14 +44,24 @@ class Token
         $token = Session::get(Token::$token_name);
 
         // Create a new unique token
-        if ($new === true or ! $token) {
+		if ($new === true OR ! $token) {
 
-            // Generate a new unique token
-            $token = sha1(uniqid(mt_rand(), true));
+			// Generate a new unique token
+			if (function_exists('openssl_random_pseudo_bytes')) {
 
-            // Store the new token
-            Session::set(Token::$token_name, $token);
-        }
+				// Generate a random pseudo bytes token if openssl_random_pseudo_bytes is available
+				// This is more secure than uniqid, because uniqid relies on microtime, which is predictable
+				$token = base64_encode(openssl_random_pseudo_bytes(32));
+
+            } else {
+
+				// Otherwise, fall back to a hashed uniqid
+				$token = sha1(uniqid(null, true));
+			}
+
+			// Store the new token
+			Session::set(Token::$token_name, $token);
+		}
 
         // Return token
         return $token;
@@ -75,17 +70,34 @@ class Token
     /**
      * Check that the given token matches the currently stored security token.
      *
-     *  <code>
-     *     if (Token::check($token)) {
-     *         // Pass
-     *     }
-     *  </code>
+     * if (Token::check($token)) {
+     *     // Pass
+     * }
      *
      * @param  string  $token token to check
-     * @return boolean
+     * @return bool
      */
-    public static function check($token)
+    public static function check(string $token) : bool
     {
-        return Token::generate() === $token;
+        return Token::slowEquals(Token::generate(), $token);
+    }
+
+    /**
+     * Compare two hashes in a time-invariant manner.
+     * Prevents cryptographic side-channel attacks (timing attacks, specifically)
+     *
+     * @param string $a cryptographic hash
+     * @param string $b cryptographic hash
+     * @return bool
+     */
+    public static function slowEquals(string $a, string $b) : bool
+    {
+        $diff = strlen($a) ^ strlen($b);
+
+        for($i = 0; $i < strlen($a) AND $i < strlen($b); $i++) {
+            $diff |= ord($a[$i]) ^ ord($b[$i]);
+        }
+
+        return $diff === 0;
     }
 }
