@@ -7,7 +7,7 @@ The Token component generate and store a unique token which can be used to help 
 ### Installation
 
 ```
-composer require force-components/token
+composer require flextype-components/token
 ```
 
 ### Usage
