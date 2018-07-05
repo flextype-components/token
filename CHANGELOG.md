@@ -1,3 +1,6 @@
+# v1.2.0, 2018-07-05
+* openssl_random_pseudo_bytes removed
+
 # v1.1.0, 2018-04-05
 * PHP7 support added
 * Generate a new unique token with openssl_random_pseudo_bytes added
